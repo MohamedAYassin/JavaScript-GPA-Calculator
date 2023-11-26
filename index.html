@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPA Calculator</title>
+	<link rel="icon" type="image/x-icon" href="favicon.png">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <fieldset id="app">
+      <legend>
+        <h1>GPA Calculator</h1>
+      </legend>
+      <form id="gpaForm">
+        <label for="studentName">Student Name:</label>
+        <input type="text" id="studentName" required>
+        <h2>Enter Grades for Six Subjects:</h2>
+        <fieldset id="gradeFields"></fieldset>
+        <button type="button" onclick="calculateGPA()">Calculate GPA</button>
+      </form>
+      <fieldset id="results">
+        <legend>
+          <h2>Results:</h2>
+        </legend>
+        <p>
+          <strong>Student:</strong>
+          <span id="resultStudentName"></span>
+        </p>
+        <p>
+          <strong>GPA with Nested If Statements:</strong>
+          <span id="resultGPAIf"></span>
+        </p>
+        <p>
+          <strong>GPA with Switch Statement:</strong>
+          <span id="resultGPASwitch"></span>
+        </p>
+      </fieldset>
+    </fieldset>
+    <script src="script.js"></script>
+  </body>
+</html>
