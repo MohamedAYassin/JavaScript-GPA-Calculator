@@ -1,75 +1,117 @@
- function calculateGPA() {
-     const studentName = document.getElementById('studentName').value;
-     for (let i = 0; i < 6; i++) {
-         const grade = parseFloat(document.getElementById(`subject${i + 1}`).value);
-         if (isNaN(grade) || grade < 0 || grade > 100) {
-             alert(`Please enter a valid grade for Subject ${i + 1}. Grades should be between 0 and 100.`);
+function calculateGPAWithIf(grades) {
+           let totalScore = grades.reduce((sum, grade) => sum + parseFloat(grade), 0);
+           let averageScore = totalScore / grades.length;
+           let grade;
+         
+           if (averageScore >= 90) {
+             grade = 'A';
+           } else if (averageScore >= 80) {
+             grade = 'B';
+           } else if (averageScore >= 70) {
+             grade = 'C';
+           } else if (averageScore >= 60) {
+             grade = 'D';
+           } else {
+             grade = 'F';
+           }
+         
+           return { gpa: averageScore.toFixed(2), grade };
+         }
+         
+         function calculateGPAWithSwitch(grades) {
+           let totalScore = grades.reduce((sum, grade) => sum + parseFloat(grade), 0);
+           let averageScore = totalScore / grades.length;
+           let grade;
+         
+           switch (true) {
+             case averageScore >= 90:
+               grade = 'A';
+               break;
+             case averageScore >= 80:
+               grade = 'B';
+               break;
+             case averageScore >= 70:
+               grade = 'C';
+               break;
+             case averageScore >= 60:
+               grade = 'D';
+               break;
+             default:
+               grade = 'F';
+           }
+         
+           return { gpa: averageScore.toFixed(2), grade };
+         }
+         
+         function createInputFields() {
+           let numStudentsInput = document.getElementById('numStudents');
+           let numStudents = parseInt(numStudentsInput.value);
+         
+           if (isNaN(numStudents) || numStudents <= 0) {
+             alert('Please enter a valid number of students greater than 0.');
              return;
+           }
+         
+           let inputFieldsDiv = document.getElementById('inputFields');
+           inputFieldsDiv.innerHTML = '';
+         
+           for (let i = 1; i <= numStudents; i++) {
+             let studentContainer = document.createElement('div');
+             studentContainer.classList.add('student-container');
+             studentContainer.innerHTML = `<h3>Student ${i}</h3>`;
+         
+             for (let j = 1; j <= 6; j++) {
+               let gradeInput = document.createElement('input');
+               gradeInput.type = 'number';
+               gradeInput.placeholder = `Enter grade for subject ${j}`;
+               gradeInput.id = `grade_${i}_${j}`;
+               studentContainer.appendChild(gradeInput);
+             }
+         
+             inputFieldsDiv.appendChild(studentContainer);
+           }
+         
+           let outputDiv = document.getElementById('output');
+           outputDiv.innerHTML = '<button onclick="calculateGPA()">Calculate GPA</button>';
          }
-     }
-
-     const grades = [];
-
-     for (let i = 0; i < 6; i++) {
-         const grade = parseFloat(document.getElementById(`subject${i + 1}`).value);
-         grades.push(grade);
-     }
-
-     let totalPointsIf = 0;
-     let totalPointsSwitch = 0;
-
-     for (let i = 0; i < grades.length; i++) {
-         if (grades[i] >= 90) {
-             totalPointsIf += 4.0;
-         } else if (grades[i] >= 80) {
-             totalPointsIf += 3.0;
-         } else if (grades[i] >= 70) {
-             totalPointsIf += 2.0;
-         } else if (grades[i] >= 60) {
-             totalPointsIf += 1.0;
+         
+         function calculateGPA() {
+         let numStudentsInput = document.getElementById('numStudents');
+         let numStudents = parseInt(numStudentsInput.value);
+         let calculationMethod = document.getElementById('calculationMethod').value;
+         
+         let outputDiv = document.getElementById('output');
+         let errors = [];
+         
+         outputDiv.innerHTML = ''; // Clear previous output
+         
+         for (let i = 1; i <= numStudents; i++) {
+         let studentGrades = [];
+         
+         for (let j = 1; j <= 6; j++) {
+           let gradeInput = document.getElementById(`grade_${i}_${j}`);
+           let grade = parseFloat(gradeInput.value);
+         
+           if (isNaN(grade) || grade < 0 || grade > 100) {
+             errors.push(`Student ${i}, Subject ${j}: Invalid grade! Please enter a valid number between 0 and 100.`);
+           }
+         
+           studentGrades.push(grade);
          }
-
-         switch (true) {
-             case grades[i] >= 90:
-                 totalPointsSwitch += 4.0;
-                 break;
-             case grades[i] >= 80:
-                 totalPointsSwitch += 3.0;
-                 break;
-             case grades[i] >= 70:
-                 totalPointsSwitch += 2.0;
-                 break;
-             case grades[i] >= 60:
-                 totalPointsSwitch += 1.0;
-                 break;
+         
+         if (!errors.length) {
+           let result;
+           if (calculationMethod === 'if') {
+             result = calculateGPAWithIf(studentGrades);
+           } else if (calculationMethod === 'switch') {
+             result = calculateGPAWithSwitch(studentGrades);
+           }
+         
+           outputDiv.innerHTML += `<p>Student ${i}: GPA: ${result.gpa}, Grade: ${result.grade}</p>`;
          }
-     }
-
-     const gpaWithIf = totalPointsIf / grades.length;
-     const gpaWithSwitch = totalPointsSwitch / grades.length;
-
-     document.getElementById('resultStudentName').textContent = studentName;
-     document.getElementById('resultGPAIf').textContent = gpaWithIf.toFixed(2);
-     document.getElementById('resultGPASwitch').textContent = gpaWithSwitch.toFixed(2);
-
-     document.getElementById('results').style.display = 'block';
- }
-
- const gradeFields = document.getElementById('gradeFields');
- for (let i = 0; i < 6; i++) {
-     const fieldset = document.createElement('fieldset');
-     const legend = document.createElement('legend');
-     legend.textContent = `Subject ${i + 1} Grade:`;
-     const label = document.createElement('label');
-     label.setAttribute('for', `subject${i + 1}`);
-     const input = document.createElement('input');
-     input.setAttribute('type', 'number');
-     input.setAttribute('id', `subject${i + 1}`);
-     input.setAttribute('min', '0');
-     input.setAttribute('max', '100');
-     input.setAttribute('required', '');
-     fieldset.appendChild(legend);
-     fieldset.appendChild(label);
-     fieldset.appendChild(input);
-     gradeFields.appendChild(fieldset);
+         }
+         
+         if (errors.length) {
+         alert(errors.join('\n'));
+         }
  }
